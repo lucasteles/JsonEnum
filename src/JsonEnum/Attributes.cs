@@ -11,9 +11,7 @@ namespace System.Text.Json.Serialization;
 public sealed class JsonEnumStringAttribute : JsonConverterAttribute
 {
     /// <inheritdoc />
-    public JsonEnumStringAttribute() : base(typeof(JsonStringEnumConverter))
-    {
-    }
+    public JsonEnumStringAttribute() : base(typeof(JsonStringEnumConverter)) { }
 }
 
 /// <summary>
@@ -26,9 +24,8 @@ public sealed class JsonEnumDescriptionAttribute : JsonConverterAttribute
 {
     /// <inheritdoc />
     public JsonEnumDescriptionAttribute() :
-        base(typeof(JsonDescriptionEnumConverter))
-    {
-    }
+        base(typeof(JsonEnumDescriptionConverter))
+    { }
 }
 
 /// <summary>
@@ -40,9 +37,7 @@ public sealed class JsonEnumDescriptionAttribute : JsonConverterAttribute
 public sealed class JsonEnumMemberValueAttribute : JsonConverterAttribute
 {
     /// <inheritdoc />
-    public JsonEnumMemberValueAttribute() : base(typeof(JsonEnumMemberValueConverter))
-    {
-    }
+    public JsonEnumMemberValueAttribute() : base(typeof(JsonEnumMemberValueConverter)) { }
 }
 
 /// <summary>
@@ -51,12 +46,10 @@ public sealed class JsonEnumMemberValueAttribute : JsonConverterAttribute
 [AttributeUsage(
     AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct |
     AttributeTargets.Enum | AttributeTargets.Property | AttributeTargets.Field)]
-public sealed class JsonEnumNumericAsStringAttribute : JsonConverterAttribute
+public sealed class JsonEnumNumericStringAttribute : JsonConverterAttribute
 {
     /// <inheritdoc />
-    public JsonEnumNumericAsStringAttribute() : base(typeof(JsonEnumNumericAsStringConverter))
-    {
-    }
+    public JsonEnumNumericStringAttribute() : base(typeof(JsonEnumNumericStringConverter)) { }
 }
 
 /// <summary>
@@ -68,7 +61,5 @@ public sealed class JsonEnumNumericAsStringAttribute : JsonConverterAttribute
 public sealed class JsonEnumNumericAttribute : JsonConverterAttribute
 {
     /// <inheritdoc />
-    public JsonEnumNumericAttribute() : base(typeof(JsonNumericEnumConverter))
-    {
-    }
+    public JsonEnumNumericAttribute() : base(typeof(JsonEnumNumericConverter)) { }
 }

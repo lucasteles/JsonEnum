@@ -71,12 +71,12 @@ class BuildProject : NukeBuild
 
     Target Report => _ => _
         .Description("Run tests and generate coverage report")
-        .DependsOn(TestCoverage)
+        .DependsOn(Test)
         .Triggers(GenerateReport, BrowseReport);
 
     Target GenerateReport => _ => _
         .Description("Generate test coverage report")
-        .After(TestCoverage)
+        .After(Test)
         .OnlyWhenDynamic(() => CoverageFiles.GlobFiles().Any())
         .Executes(() =>
             ReportGenerator(r => r
@@ -112,7 +112,7 @@ class BuildProject : NukeBuild
 
     Target GenerateBadges => _ => _
         .Description("Generate cool badges for readme")
-        .After(TestCoverage)
+        .After(Test)
         .Requires(() => CoverageFiles.GlobFiles().Any())
         .Executes(() =>
         {

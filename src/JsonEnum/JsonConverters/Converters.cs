@@ -28,10 +28,10 @@ class JsonEnumDescriptionConverter<TEnum> : JsonEnumCustomStringConverter<TEnum>
         EnumHelpers.GetEnumFromDescription<TEnum>(value, comparison);
 }
 
-class JsonEnumNumericAsStringConverter<TEnum> : JsonEnumCustomStringConverter<TEnum>
+class JsonEnumNumericStringConverter<TEnum> : JsonEnumCustomStringConverter<TEnum>
     where TEnum : struct, Enum
 {
-    public JsonEnumNumericAsStringConverter(StringComparison comparison = StringComparison.Ordinal)
+    public JsonEnumNumericStringConverter(StringComparison comparison = StringComparison.Ordinal)
         :
         base(comparison)
     { }

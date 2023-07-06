@@ -8,15 +8,15 @@ using System;
 /// <summary>
 /// Converter for json using description attribute
 /// </summary>
-public sealed class JsonDescriptionEnumConverter : JsonEnumCustomStringConverterFactory
+public sealed class JsonEnumDescriptionConverter : JsonEnumCustomStringConverterFactory
 {
     /// <inheritdoc />
-    public JsonDescriptionEnumConverter(StringComparison comparison) :
+    public JsonEnumDescriptionConverter(StringComparison comparison) :
         base(comparison)
     { }
 
     /// <inheritdoc />
-    public JsonDescriptionEnumConverter() :
+    public JsonEnumDescriptionConverter() :
         base(StringComparison.Ordinal)
     { }
 
@@ -50,21 +50,21 @@ public sealed class JsonEnumMemberValueConverter : JsonEnumCustomStringConverter
 /// <summary>
 /// Converter for json using description attribute
 /// </summary>
-public sealed class JsonEnumNumericAsStringConverter : JsonEnumCustomStringConverterFactory
+public sealed class JsonEnumNumericStringConverter : JsonEnumCustomStringConverterFactory
 {
     /// <inheritdoc />
-    public JsonEnumNumericAsStringConverter() : base(StringComparison.Ordinal) { }
+    public JsonEnumNumericStringConverter() : base(StringComparison.Ordinal) { }
 
     /// <inheritdoc />
     protected override Type GetCustomConverter(Type typeToConvert) =>
-        typeof(JsonEnumNumericAsStringConverter<>)
+        typeof(JsonEnumNumericStringConverter<>)
             .MakeGenericType(typeToConvert);
 }
 
 /// <summary>
 /// Converter for json using description attribute
 /// </summary>
-public sealed class JsonNumericEnumConverter : JsonConverterFactory
+public sealed class JsonEnumNumericConverter : JsonConverterFactory
 {
     /// <inheritdoc />
     public override bool CanConvert(Type typeToConvert) => typeToConvert.IsEnum;
@@ -73,6 +73,6 @@ public sealed class JsonNumericEnumConverter : JsonConverterFactory
     public override JsonConverter CreateConverter(
         Type typeToConvert, JsonSerializerOptions options) =>
         (JsonConverter)Activator.CreateInstance(
-            typeof(JsonNumericEnumValueConverter<>)
+            typeof(JsonEnumNumericValueConverter<>)
                 .MakeGenericType(typeToConvert))!;
 }

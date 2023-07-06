@@ -4,12 +4,12 @@ using System.Text.Json.Serialization;
 
 namespace JsonEnum.JsonConverters;
 
-class JsonNumericEnumValueConverter<TEnum> : JsonConverter<TEnum>
+class JsonEnumNumericValueConverter<TEnum> : JsonConverter<TEnum>
     where TEnum : struct, Enum
 {
     readonly Type underlyingType;
 
-    public JsonNumericEnumValueConverter() =>
+    public JsonEnumNumericValueConverter() =>
         underlyingType = Enum.GetUnderlyingType(typeof(TEnum));
 
     public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_build", "build\_build.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonEnum", "src\JsonEnum\JsonEnum.csproj", "{C6E10177-1C80-4F0D-A5F8-0D56963A363C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonEnum.Swagger", "src\JsonEnum.Swagger\JsonEnum.Swagger.csproj", "{E2278F98-F6CD-4888-9C9E-4B9D9DED6E48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{C6E10177-1C80-4F0D-A5F8-0D56963A363C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6E10177-1C80-4F0D-A5F8-0D56963A363C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6E10177-1C80-4F0D-A5F8-0D56963A363C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2278F98-F6CD-4888-9C9E-4B9D9DED6E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2278F98-F6CD-4888-9C9E-4B9D9DED6E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2278F98-F6CD-4888-9C9E-4B9D9DED6E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2278F98-F6CD-4888-9C9E-4B9D9DED6E48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,5 +45,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E54ABC87-5074-4EE7-A220-53E46986428A} = {18DDE0D0-38EA-4936-8AD2-03ED44A38053}
 		{C6E10177-1C80-4F0D-A5F8-0D56963A363C} = {0BAC928C-339F-4FB4-A854-386C901B6B0F}
+		{E2278F98-F6CD-4888-9C9E-4B9D9DED6E48} = {0BAC928C-339F-4FB4-A854-386C901B6B0F}
 	EndGlobalSection
 EndGlobal

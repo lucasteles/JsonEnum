@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -108,4 +109,10 @@ public static class EnumHelpers
         StringComparison comparison = StringComparison.Ordinal)
         where TEnum : struct, Enum =>
         GetEnumByString<TEnum>(enumDescription, e => e.GetEnumMemberValue(), comparison);
+
+    /// <summary>
+    /// Retrieves an enumerable of the values of the constants in a specified enumeration.
+    /// </summary>
+    public static IEnumerable<object> GetValues(Type enumType) =>
+        Enum.GetValues(enumType).Cast<object>();
 }
