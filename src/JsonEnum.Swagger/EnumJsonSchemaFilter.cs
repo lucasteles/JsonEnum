@@ -44,11 +44,7 @@ public class EnumJsonSchemaFilter : ISchemaFilter
         foreach (var item in items) schema.Enum.Add(item);
 
         if (descriptions.Length > 0)
-            schema.Description +=
-                $"""
-                 <p>Members:</p>
-                 <ul>{descriptions}</ul>
-                """;
+            schema.Description += $"\n<p>Members:</p>\n<ul>{descriptions}</ul>\n";
     }
 
     static IOpenApiAny? GetEnumValue(Type type, Type converter,
