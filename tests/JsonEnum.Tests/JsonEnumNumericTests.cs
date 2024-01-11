@@ -13,7 +13,7 @@ public class JsonEnumNumericTests : BaseTest
     {
         Converters =
         {
-            new JsonEnumNumericConverter(),
+            new JsonNumericEnumConverter(),
         },
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
@@ -91,7 +91,7 @@ public class JsonEnumNumericAttributeTests : BaseTest
     {
         Converters =
         {
-            new JsonEnumNumericConverter(),
+            new JsonNumericEnumConverter(),
         },
     };
 

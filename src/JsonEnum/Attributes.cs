@@ -24,7 +24,7 @@ public sealed class JsonEnumDescriptionAttribute : JsonConverterAttribute
 {
     /// <inheritdoc />
     public JsonEnumDescriptionAttribute() :
-        base(typeof(JsonEnumDescriptionConverter))
+        base(typeof(JsonDescriptionEnumConverter))
     { }
 }
 
@@ -37,7 +37,7 @@ public sealed class JsonEnumDescriptionAttribute : JsonConverterAttribute
 public sealed class JsonEnumMemberValueAttribute : JsonConverterAttribute
 {
     /// <inheritdoc />
-    public JsonEnumMemberValueAttribute() : base(typeof(JsonEnumMemberValueConverter)) { }
+    public JsonEnumMemberValueAttribute() : base(typeof(JsonMemberValueEnumConverter)) { }
 }
 
 /// <summary>
@@ -49,7 +49,7 @@ public sealed class JsonEnumMemberValueAttribute : JsonConverterAttribute
 public sealed class JsonEnumNumericStringAttribute : JsonConverterAttribute
 {
     /// <inheritdoc />
-    public JsonEnumNumericStringAttribute() : base(typeof(JsonEnumNumericStringConverter)) { }
+    public JsonEnumNumericStringAttribute() : base(typeof(JsonNumericStringEnumConverter)) { }
 }
 
 /// <summary>
@@ -61,5 +61,5 @@ public sealed class JsonEnumNumericStringAttribute : JsonConverterAttribute
 public sealed class JsonEnumNumericAttribute : JsonConverterAttribute
 {
     /// <inheritdoc />
-    public JsonEnumNumericAttribute() : base(typeof(JsonEnumNumericConverter)) { }
+    public JsonEnumNumericAttribute() : base(typeof(JsonNumericEnumConverter)) { }
 }

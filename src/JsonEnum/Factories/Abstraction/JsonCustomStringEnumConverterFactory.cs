@@ -6,7 +6,7 @@ namespace JsonEnum.Factories.Abstraction;
 /// <summary>
 /// base string enum converter
 /// </summary>
-public abstract class JsonEnumCustomStringConverterFactory : JsonConverterFactory
+public abstract class JsonCustomStringEnumConverterFactory : JsonConverterFactory
 {
     /// <summary>
     /// String comparison method for enum names
@@ -22,7 +22,7 @@ public abstract class JsonEnumCustomStringConverterFactory : JsonConverterFactor
     /// string comparison to determine if the string matches
     /// </param>
     /// <param name="namingPolicy"></param>
-    protected JsonEnumCustomStringConverterFactory(
+    protected JsonCustomStringEnumConverterFactory(
         StringComparison stringComparison,
         JsonNamingPolicy? namingPolicy = null
     )
@@ -38,7 +38,7 @@ public abstract class JsonEnumCustomStringConverterFactory : JsonConverterFactor
     /// Construct converter
     /// uses string comparison to determine if the string matches
     /// </summary>
-    protected JsonEnumCustomStringConverterFactory() : this(StringComparison.Ordinal)
+    protected JsonCustomStringEnumConverterFactory() : this(StringComparison.Ordinal)
     {
         // An empty constructor is needed for construction via attributes
     }

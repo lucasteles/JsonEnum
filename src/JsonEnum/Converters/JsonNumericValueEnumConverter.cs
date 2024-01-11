@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace JsonEnum.Converters;
 
-class JsonEnumNumericValueConverter<TEnum> : JsonConverter<TEnum>
+class JsonNumericValueEnumConverter<TEnum> : JsonConverter<TEnum>
     where TEnum : struct, Enum
 {
     static readonly TypeCode typeCode = Type.GetTypeCode(typeof(TEnum));

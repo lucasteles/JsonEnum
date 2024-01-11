@@ -4,9 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
-
+    <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
     <RootNamespace>JsonEnum.Tests</RootNamespace>
   </PropertyGroup>
 

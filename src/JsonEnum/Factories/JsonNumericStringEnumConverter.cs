@@ -7,12 +7,12 @@ namespace System.Text.Json.Serialization;
 /// <summary>
 /// Converter for json using description attribute
 /// </summary>
-public sealed class JsonEnumNumericStringConverter : JsonEnumCustomStringConverterFactory
+public sealed class JsonNumericStringEnumConverter : JsonCustomStringEnumConverterFactory
 {
     readonly object?[] converterTypeArgs;
 
     /// <inheritdoc />
-    public JsonEnumNumericStringConverter() : base(StringComparison.InvariantCultureIgnoreCase) =>
+    public JsonNumericStringEnumConverter() : base(StringComparison.InvariantCultureIgnoreCase) =>
         converterTypeArgs = new object[]
         {
             stringComparison,
@@ -23,6 +23,6 @@ public sealed class JsonEnumNumericStringConverter : JsonEnumCustomStringConvert
 
     /// <inheritdoc />
     protected override Type GetCustomConverter(Type typeToConvert) =>
-        typeof(JsonEnumNumericStringConverter<>)
+        typeof(JsonNumericStringEnumConverter<>)
             .MakeGenericType(typeToConvert);
 }

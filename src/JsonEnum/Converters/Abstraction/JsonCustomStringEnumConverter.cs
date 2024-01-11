@@ -4,49 +4,64 @@ using System.Text.Json.Serialization;
 
 namespace JsonEnum.Converters.Abstraction;
 
-abstract class JsonEnumCustomStringConverter<TEnum> : JsonConverter<TEnum>
+abstract class JsonCustomStringEnumConverter<TEnum> : JsonConverter<TEnum>
     where TEnum : struct, Enum
 {
-    protected readonly JsonNamingPolicy? namingPolicy;
-
     readonly Dictionary<TEnum, string> nameCache;
     readonly Dictionary<string, TEnum> valueCache;
+    JsonNamingPolicy? namingPolicy;
 
     static readonly TypeCode typeCode = Type.GetTypeCode(typeof(TEnum));
 
-    protected abstract string GetCustomString(TEnum value);
+    protected abstract string GetCustomString(TEnum value, JsonNamingPolicy? namingPolicy);
 
     public virtual bool AllowNumbers { get; set; } = false;
 
-    protected JsonEnumCustomStringConverter(
+    protected JsonCustomStringEnumConverter(
         StringComparison comparison = StringComparison.Ordinal,
         JsonNamingPolicy? namingPolicy = null
     )
     {
-        this.namingPolicy = namingPolicy;
-
         nameCache = new();
         valueCache = new(StringComparer.FromComparison(comparison));
 
+        this.namingPolicy = namingPolicy;
         LoadCache();
     }
 
     void LoadCache()
     {
+        nameCache.Clear();
+        valueCache.Clear();
         foreach (var value in Enum.GetValues<TEnum>())
         {
-            var name = GetCustomString(value);
+            var name = GetCustomString(value, namingPolicy);
             nameCache.Add(value, name);
             valueCache.Add(name, value);
         }
     }
 
-    public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options) =>
+    public override void Write(Utf8JsonWriter writer, TEnum value, JsonSerializerOptions options)
+    {
+        if (namingPolicy is null && options.PropertyNamingPolicy is { } policy)
+        {
+            namingPolicy = policy;
+            LoadCache();
+        }
+
         writer.WriteStringValue(nameCache.GetValueOrDefault(value));
+    }
 
     public override TEnum Read(
-        ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-        reader.TokenType switch
+        ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (namingPolicy is null && options.PropertyNamingPolicy is { } policy)
+        {
+            namingPolicy = policy;
+            LoadCache();
+        }
+
+        return reader.TokenType switch
         {
             JsonTokenType.Number when AllowNumbers => typeCode switch
             {
@@ -73,4 +88,5 @@ abstract class JsonEnumCustomStringConverter<TEnum> : JsonConverter<TEnum>
                                       valueCache.TryGetValue(enumString, out var value) => value,
             _ => throw new JsonException("Invalid enum description"),
         };
+    }
 }

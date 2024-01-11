@@ -1,17 +1,28 @@
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 namespace JsonEnum.Swagger;
 
 /// <summary>
 /// Show schema for JsonEnum
 /// </summary>
-public class EnumJsonSchemaFilter : ISchemaFilter
+public class JsonEnumSchemaFilter : ISchemaFilter
 {
+    readonly JsonSerializerOptions? jsonOptions;
+
+    /// <summary>
+    /// Crate new json enum schema
+    /// </summary>
+    public JsonEnumSchemaFilter(IOptions<JsonOptions>? options = null) =>
+        jsonOptions = options?.Value.SerializerOptions;
+
     /// <inheritdoc />
     public void Apply(OpenApiSchema schema, SchemaFilterContext context)
     {
@@ -21,7 +32,7 @@ public class EnumJsonSchemaFilter : ISchemaFilter
             .GetCustomAttributes<JsonConverterAttribute>(true)
             .Select(x => x.ConverterType)
             .Where(x => x is not null).Cast<Type>()
-            .LastOrDefault(x => x.Name.Contains("Enum") && x.Name.Contains("Json"));
+            .LastOrDefault();
 
         if (converter is null) return;
 
@@ -44,43 +55,43 @@ public class EnumJsonSchemaFilter : ISchemaFilter
             schema.Description += $"\n<p>Members:</p>\n<ul>{descriptions}</ul>\n";
     }
 
-    static IOpenApiAny? GetEnumValue(Type type, Type converter,
-        object value, out string? newValue)
+    JsonElement? SerializeValue(object value, Type converterType)
     {
-        var enumName = type.GetEnumName(value);
+        if (Activator.CreateInstance(converterType) is not JsonConverter converter)
+            return null;
+
+        JsonSerializerOptions options = new()
+        {
+            PropertyNamingPolicy = jsonOptions?.PropertyNamingPolicy,
+        };
+
+        options.Converters.Add(converter);
+
+        foreach (var c in jsonOptions?.Converters ?? Enumerable.Empty<JsonConverter>())
+            options.Converters.Add(c);
+
+        return JsonSerializer.SerializeToElement(value, options);
+    }
+
+    IOpenApiAny? GetEnumValue(
+        Type type, Type converter,
+        object value, out string? newValue
+    )
+    {
         newValue = null;
 
-        if (converter == typeof(JsonEnumNumericConverter))
+        if (SerializeValue(value, converter) is not { } jsonValue)
+            return new OpenApiString(type.GetEnumName(value));
+
+        var typeCode = Type.GetTypeCode(type);
+
+        return jsonValue.ValueKind switch
         {
-            var underType = Enum.GetUnderlyingType(type);
-            if (underType == typeof(long))
-            {
-                var longValue = (long)value;
-                newValue = longValue.ToString();
-                return new OpenApiLong(longValue);
-            }
-
-            var intValue = (int)value;
-            newValue = intValue.ToString();
-            return new OpenApiLong(intValue);
-        }
-
-        if (converter == typeof(JsonEnumNumericStringConverter))
-        {
-            var numberValue = ((long)value).ToString();
-            newValue = $"\"{numberValue}\"";
-            return new OpenApiString(numberValue);
-        }
-
-        if (converter == typeof(JsonStringEnumConverter))
-            return new OpenApiString(enumName);
-
-        if (converter == typeof(JsonEnumDescriptionConverter))
-            return new OpenApiString(EnumHelpers.GetDescription(value));
-
-        if (converter == typeof(JsonEnumMemberValueConverter))
-            return new OpenApiString(EnumHelpers.GetEnumMemberValue(value));
-
-        return null;
+            JsonValueKind.String => new OpenApiString(jsonValue.GetString()),
+            JsonValueKind.Number when typeCode is TypeCode.Int64 or TypeCode.UInt32 or TypeCode.UInt64 =>
+                new OpenApiLong(jsonValue.GetInt64()),
+            JsonValueKind.Number => new OpenApiInteger(jsonValue.GetInt32()),
+            _ => null,
+        };
     }
 }

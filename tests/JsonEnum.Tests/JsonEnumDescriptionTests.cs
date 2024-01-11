@@ -10,7 +10,7 @@ public class JsonEnumDescriptionTests : BaseTest
 {
     readonly JsonSerializerOptions options = new()
     {
-        Converters = { new JsonEnumDescriptionConverter() },
+        Converters = { new JsonDescriptionEnumConverter() },
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 

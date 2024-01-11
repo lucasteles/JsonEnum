@@ -7,22 +7,18 @@ namespace System.Text.Json.Serialization;
 /// <summary>
 /// Converter for json using description attribute
 /// </summary>
-public sealed class JsonEnumMemberValueConverter : JsonEnumCustomStringConverterFactory
+public sealed class JsonMemberValueEnumConverter : JsonCustomStringEnumConverterFactory
 {
     /// <inheritdoc />
-    public JsonEnumMemberValueConverter(StringComparison comparison) :
-        base(comparison)
-    {
-    }
+    public JsonMemberValueEnumConverter(StringComparison comparison) : base(comparison) { }
 
     /// <inheritdoc />
-    public JsonEnumMemberValueConverter() :
+    public JsonMemberValueEnumConverter() :
         base(StringComparison.Ordinal)
-    {
-    }
+    { }
 
     /// <inheritdoc />
     protected override Type GetCustomConverter(Type typeToConvert) =>
-        typeof(JsonEnumMemberValueConverter<>)
+        typeof(JsonMemberValueEnumConverter<>)
             .MakeGenericType(typeToConvert);
 }

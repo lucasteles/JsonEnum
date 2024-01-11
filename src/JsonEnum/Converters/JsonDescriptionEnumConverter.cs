@@ -3,17 +3,16 @@ using JsonEnum.Converters.Abstraction;
 
 namespace JsonEnum.Converters;
 
-class JsonEnumDescriptionConverter<TEnum> : JsonEnumCustomStringConverter<TEnum>
+class JsonDescriptionEnumConverter<TEnum> : JsonCustomStringEnumConverter<TEnum>
     where TEnum : struct, Enum
 {
-    public JsonEnumDescriptionConverter(
+    public JsonDescriptionEnumConverter(
         StringComparison comparison = StringComparison.Ordinal,
         JsonNamingPolicy? namingPolicy = null
     ) :
         base(comparison, namingPolicy)
-    {
-    }
+    { }
 
-    protected override string GetCustomString(TEnum value) =>
+    protected override string GetCustomString(TEnum value, JsonNamingPolicy? namingPolicy) =>
         value.GetDescription(namingPolicy);
 }
