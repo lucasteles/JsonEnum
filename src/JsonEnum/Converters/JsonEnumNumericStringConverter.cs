@@ -1,4 +1,3 @@
-using System;
 using JsonEnum.Converters.Abstraction;
 
 namespace JsonEnum.Converters;
