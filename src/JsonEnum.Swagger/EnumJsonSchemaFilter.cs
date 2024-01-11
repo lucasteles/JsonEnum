@@ -6,7 +6,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 namespace JsonEnum.Swagger;
 
@@ -20,7 +19,7 @@ public class JsonEnumSchemaFilter : ISchemaFilter
     /// <summary>
     /// Crate new json enum schema
     /// </summary>
-    public JsonEnumSchemaFilter(IOptions<JsonOptions>? options = null) =>
+    public JsonEnumSchemaFilter(IOptions<Microsoft.AspNetCore.Http.Json.JsonOptions>? options = null) =>
         jsonOptions = options?.Value.SerializerOptions;
 
     /// <inheritdoc />
@@ -63,12 +62,12 @@ public class JsonEnumSchemaFilter : ISchemaFilter
         JsonSerializerOptions options = new()
         {
             PropertyNamingPolicy = jsonOptions?.PropertyNamingPolicy,
+            DictionaryKeyPolicy = jsonOptions?.DictionaryKeyPolicy,
+            Converters =
+            {
+                converter,
+            },
         };
-
-        options.Converters.Add(converter);
-
-        foreach (var c in jsonOptions?.Converters ?? Enumerable.Empty<JsonConverter>())
-            options.Converters.Add(c);
 
         return JsonSerializer.SerializeToElement(value, options);
     }
