@@ -96,3 +96,36 @@ public sealed class JsonEnumOptions
         AllowIntegerValues = AllowIntegerValues,
     };
 }
+
+/// <summary>
+/// Sets the naming policy
+/// </summary>
+public enum JsonEnumNamingPolicy
+{
+    /// <summary>
+    /// Use JsonNamingPolicy.CamelCase
+    /// </summary>
+    CamelCase,
+
+#if NET8_0_OR_GREATER
+    /// <summary>
+    /// Use JsonNamingPolicy.KebabCaseLower
+    /// </summary>
+    KebabCaseLower,
+
+    /// <summary>
+    /// Use JsonNamingPolicy.KebabCaseUpper
+    /// </summary>
+    KebabCaseUpper,
+
+    /// <summary>
+    /// Use JsonNamingPolicy.SnakeCaseUpper
+    /// </summary>
+    SnakeCaseUpper,
+
+    /// <summary>
+    /// Use JsonNamingPolicy.SnakeCaseLower
+    /// </summary>
+    SnakeCaseLower,
+#endif
+}

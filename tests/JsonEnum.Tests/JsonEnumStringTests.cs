@@ -177,3 +177,68 @@ public class JsonEnumStringFlagsSepTests : BaseTest
         value!.Data.Should().Be(@enum);
     }
 }
+
+public class JsonEnumStringNamingCaseTests : BaseTest
+{
+    public JsonSerializerOptions GetOptions(JsonEnumNamingPolicy? policy) =>
+        new()
+        {
+            Converters =
+            {
+                new JsonEnumStringConverter(policy?.ToJsonNamingPolicy()),
+            },
+        };
+
+    public enum TestEnumCases
+    {
+        TheValue1,
+        TheValue2,
+    }
+
+    public record TestData(TestEnumCases Data);
+
+    [TestCase(TestEnumCases.TheValue1, "TheValue1", null)]
+    [TestCase(TestEnumCases.TheValue2, "TheValue2", null)]
+    [TestCase(TestEnumCases.TheValue1, "theValue1", JsonEnumNamingPolicy.CamelCase)]
+    [TestCase(TestEnumCases.TheValue2, "theValue2", JsonEnumNamingPolicy.CamelCase)]
+#if NET8_0_OR_GREATER
+    [TestCase(TestEnumCases.TheValue1, "the-value1", JsonEnumNamingPolicy.KebabCaseLower)]
+    [TestCase(TestEnumCases.TheValue2, "the-value2", JsonEnumNamingPolicy.KebabCaseLower)]
+    [TestCase(TestEnumCases.TheValue1, "THE-VALUE1", JsonEnumNamingPolicy.KebabCaseUpper)]
+    [TestCase(TestEnumCases.TheValue2, "THE-VALUE2", JsonEnumNamingPolicy.KebabCaseUpper)]
+    [TestCase(TestEnumCases.TheValue1, "the_value1", JsonEnumNamingPolicy.SnakeCaseLower)]
+    [TestCase(TestEnumCases.TheValue2, "the_value2", JsonEnumNamingPolicy.SnakeCaseLower)]
+    [TestCase(TestEnumCases.TheValue1, "THE_VALUE1", JsonEnumNamingPolicy.SnakeCaseUpper)]
+    [TestCase(TestEnumCases.TheValue2, "THE_VALUE2", JsonEnumNamingPolicy.SnakeCaseUpper)]
+#endif
+    public void ShouldSerialize(TestEnumCases @enum, string name, JsonEnumNamingPolicy? policy)
+    {
+        var value = Serialize(new TestData(@enum), GetOptions(policy));
+        var expected = $@"{{""Data"":""{name}""}}";
+
+        value.Should().Be(expected);
+    }
+
+    [TestCase("TheValue1", TestEnumCases.TheValue1, null)]
+    [TestCase("TheValue2", TestEnumCases.TheValue2, null)]
+    [TestCase("theValue1", TestEnumCases.TheValue1, JsonEnumNamingPolicy.CamelCase)]
+    [TestCase("theValue2", TestEnumCases.TheValue2, JsonEnumNamingPolicy.CamelCase)]
+#if NET8_0_OR_GREATER
+    [TestCase("the-value1", TestEnumCases.TheValue1, JsonEnumNamingPolicy.KebabCaseLower)]
+    [TestCase("the-value2", TestEnumCases.TheValue2, JsonEnumNamingPolicy.KebabCaseLower)]
+    [TestCase("THE-VALUE1", TestEnumCases.TheValue1, JsonEnumNamingPolicy.KebabCaseUpper)]
+    [TestCase("THE-VALUE2", TestEnumCases.TheValue2, JsonEnumNamingPolicy.KebabCaseUpper)]
+    [TestCase("the_value1", TestEnumCases.TheValue1, JsonEnumNamingPolicy.SnakeCaseLower)]
+    [TestCase("the_value2", TestEnumCases.TheValue2, JsonEnumNamingPolicy.SnakeCaseLower)]
+    [TestCase("THE_VALUE1", TestEnumCases.TheValue1, JsonEnumNamingPolicy.SnakeCaseUpper)]
+    [TestCase("THE_VALUE2", TestEnumCases.TheValue2, JsonEnumNamingPolicy.SnakeCaseUpper)]
+#endif
+#if NET8_OR_GREATER
+#endif
+    public void ShouldDeserialize(string name, TestEnumCases @enum, JsonEnumNamingPolicy? policy)
+    {
+        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}", GetOptions(policy))!.Data;
+
+        value.Should().Be(@enum);
+    }
+}

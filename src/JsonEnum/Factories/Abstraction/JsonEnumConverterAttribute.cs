@@ -1,5 +1,3 @@
-using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace JsonEnum.Factories.Abstraction;
@@ -12,12 +10,7 @@ public abstract class JsonEnumConverterAttribute : JsonConverterAttribute
     /// <summary>
     /// Gets or sets the name policy for enum value serialization
     /// </summary>
-    public JsonNamingPolicy? NamingPolicy { get; set; }
-
-    /// <summary>
-    /// Gets or sets the encoder to use when escaping strings, or null to use the default encoder.
-    /// </summary>
-    public JavaScriptEncoder? Encoder { get; set; }
+    public JsonEnumNamingPolicy? NamingPolicy { get; set; }
 
     /// <summary>
     /// Gets or sets separator for string serialization of Flags
@@ -58,8 +51,7 @@ public abstract class JsonEnumConverterAttribute : JsonConverterAttribute
     {
         JsonEnumOptions options = new()
         {
-            NamingPolicy = NamingPolicy,
-            Encoder = Encoder,
+            NamingPolicy = NamingPolicy?.ToJsonNamingPolicy(),
             FlagsValueSeparator = FlagsValueSeparator,
         };
 

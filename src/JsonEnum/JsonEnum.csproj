@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net8.0; net6.0</TargetFrameworks>
     <PackageId>JsonEnum</PackageId>
     <Authors>Lucas Teles - lucas.teles@outlook.com</Authors>
-    <Company />
+    <Company/>
     <Description>Enum json helpers</Description>
     <RepositoryType>GitHub</RepositoryType>
     <PackageProjectUrl>https://github.com/lucasteles/JsonEnum</PackageProjectUrl>
     <RepositoryUrl>https://github.com/lucasteles/JsonEnum</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-
+    <IsPackable>true</IsPackable>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>extensions, tools, helpers, utils</PackageTags>
@@ -24,7 +24,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="\" />
+    <None Include="../../README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>

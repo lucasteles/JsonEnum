@@ -4,13 +4,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <PackageId>JsonEnum.Swagger</PackageId>
     <Authors>Lucas Teles - lucas.teles@outlook.com</Authors>
-    <Company />
+    <Company/>
     <Description>Filters to show enums with converters on swagger</Description>
     <RepositoryType>GitHub</RepositoryType>
     <PackageProjectUrl>https://github.com/lucasteles/JsonEnum</PackageProjectUrl>
     <RepositoryUrl>https://github.com/lucasteles/JsonEnum</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-
+    <IsPackable>true</IsPackable>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>extensions, tools, helpers, utils</PackageTags>
@@ -24,7 +24,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="\" />
+    <None Include="../../README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
@@ -33,14 +33,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JsonEnum\JsonEnum.csproj" />
-  </ItemGroup>
-
 </Project>
