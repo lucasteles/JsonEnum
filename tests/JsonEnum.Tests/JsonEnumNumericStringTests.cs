@@ -100,3 +100,72 @@ public class JsonEnumNumericStringAttributeTests : BaseTest
         value!.Data.Should().Be(@enum);
     }
 }
+
+public class JsonEnumNumericStringFlagsTests : BaseTest
+{
+    public record TestData([property: JsonEnumNumericString] EnumFlagsForString Data);
+
+    [TestCase(EnumFlagsForString.Value1, "2")]
+    [TestCase(EnumFlagsForString.Value2, "4")]
+    [TestCase(EnumFlagsForString.Value3, "8")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value2, "6")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value3, "10")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value2 | EnumFlagsForString.Value3, "14")]
+    public void ShouldSerialize(EnumFlagsForString @enum, string name)
+    {
+        var value = Serialize(new TestData(@enum));
+        var expected = $@"{{""Data"":""{name}""}}";
+
+        value.Should().Be(expected);
+    }
+
+    [TestCase("2", EnumFlagsForString.Value1)]
+    [TestCase("4", EnumFlagsForString.Value2)]
+    [TestCase("8", EnumFlagsForString.Value3)]
+    [TestCase("6", EnumFlagsForString.Value1 | EnumFlagsForString.Value2)]
+    [TestCase("10", EnumFlagsForString.Value1 | EnumFlagsForString.Value3)]
+    [TestCase("14", EnumFlagsForString.Value1 | EnumFlagsForString.Value2 | EnumFlagsForString.Value3)]
+    public void ShouldDeserialize(string name, EnumFlagsForString @enum)
+    {
+        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}");
+
+        value!.Data.Should().Be(@enum);
+    }
+}
+
+public class JsonEnumNumericStringFlagsSepTests : BaseTest
+{
+    public record TestData(
+        [property: JsonEnumNumericString(FlagsValueSeparator = "|")]
+        EnumFlagsForString Data
+    );
+
+    [TestCase(EnumFlagsForString.Value1, "2")]
+    [TestCase(EnumFlagsForString.Value2, "4")]
+    [TestCase(EnumFlagsForString.Value3, "8")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value2, "2|4")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value3, "2|8")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value2 | EnumFlagsForString.Value3,
+        "2|4|8")]
+    public void ShouldSerialize(EnumFlagsForString @enum, string name)
+    {
+        var value = Serialize(new TestData(@enum));
+        var expected = $@"{{""Data"":""{name}""}}";
+
+        value.Should().Be(expected);
+    }
+
+    [TestCase("2", EnumFlagsForString.Value1)]
+    [TestCase("4", EnumFlagsForString.Value2)]
+    [TestCase("8", EnumFlagsForString.Value3)]
+    [TestCase("2|4", EnumFlagsForString.Value1 | EnumFlagsForString.Value2)]
+    [TestCase("2|8", EnumFlagsForString.Value1 | EnumFlagsForString.Value3)]
+    [TestCase("2|4|8",
+        EnumFlagsForString.Value1 | EnumFlagsForString.Value2 | EnumFlagsForString.Value3)]
+    public void ShouldDeserialize(string name, EnumFlagsForString @enum)
+    {
+        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}");
+
+        value!.Data.Should().Be(@enum);
+    }
+}

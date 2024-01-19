@@ -76,7 +76,7 @@ public class JsonEnumStringAttributeTests : BaseTest
         Converters =
         {
             new JsonEnumNumericConverter(),
-        }
+        },
     };
 
     [JsonEnumString]
@@ -92,18 +92,88 @@ public class JsonEnumStringAttributeTests : BaseTest
     [TestCase(TestEnumType.Value2, "Value2")]
     public void ShouldSerialize(TestEnumType @enum, string name)
     {
-        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}", options);
+        var value = Serialize(new TestData(@enum), options);
+        var expected = $@"{{""Data"":""{name}""}}";
 
-        value!.Data.Should().Be(@enum);
+        value.Should().Be(expected);
     }
 
     [TestCase("Value1", TestEnumType.Value1)]
     [TestCase("Value2", TestEnumType.Value2)]
     public void ShouldDeserialize(string name, TestEnumType @enum)
     {
-        var value = Serialize(new TestData(@enum), options);
+        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}", options);
+
+        value!.Data.Should().Be(@enum);
+    }
+}
+
+public class JsonEnumStringFlagsTests : BaseTest
+{
+    public record TestData([property: JsonEnumString] EnumFlagsForString Data);
+
+    [TestCase(EnumFlagsForString.Value1, "Value1")]
+    [TestCase(EnumFlagsForString.Value2, "Value2")]
+    [TestCase(EnumFlagsForString.Value3, "Value3")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value2, "Value1, Value2")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value3, "Value1, Value3")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value2 | EnumFlagsForString.Value3,
+        "Value1, Value2, Value3")]
+    public void ShouldSerialize(EnumFlagsForString @enum, string name)
+    {
+        var value = Serialize(new TestData(@enum));
         var expected = $@"{{""Data"":""{name}""}}";
 
         value.Should().Be(expected);
+    }
+
+    [TestCase("Value1", EnumFlagsForString.Value1)]
+    [TestCase("Value2", EnumFlagsForString.Value2)]
+    [TestCase("Value3", EnumFlagsForString.Value3)]
+    [TestCase("Value1, Value2", EnumFlagsForString.Value1 | EnumFlagsForString.Value2)]
+    [TestCase("Value1, Value3", EnumFlagsForString.Value1 | EnumFlagsForString.Value3)]
+    [TestCase("Value1, Value2, Value3",
+        EnumFlagsForString.Value1 | EnumFlagsForString.Value2 | EnumFlagsForString.Value3)]
+    public void ShouldDeserialize(string name, EnumFlagsForString @enum)
+    {
+        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}");
+
+        value!.Data.Should().Be(@enum);
+    }
+}
+
+public class JsonEnumStringFlagsSepTests : BaseTest
+{
+    public record TestData(
+        [property: JsonEnumString(FlagsValueSeparator = "|")]
+        EnumFlagsForString Data);
+
+    [TestCase(EnumFlagsForString.Value1, "Value1")]
+    [TestCase(EnumFlagsForString.Value2, "Value2")]
+    [TestCase(EnumFlagsForString.Value3, "Value3")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value2, "Value1|Value2")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value3, "Value1|Value3")]
+    [TestCase(EnumFlagsForString.Value1 | EnumFlagsForString.Value2 | EnumFlagsForString.Value3,
+        "Value1|Value2|Value3")]
+    public void ShouldSerialize(EnumFlagsForString @enum, string name)
+    {
+        var value = Serialize(new TestData(@enum));
+        var expected = $@"{{""Data"":""{name}""}}";
+
+        value.Should().Be(expected);
+    }
+
+    [TestCase("Value1", EnumFlagsForString.Value1)]
+    [TestCase("Value2", EnumFlagsForString.Value2)]
+    [TestCase("Value3", EnumFlagsForString.Value3)]
+    [TestCase("Value1|Value2", EnumFlagsForString.Value1 | EnumFlagsForString.Value2)]
+    [TestCase("Value1|Value3", EnumFlagsForString.Value1 | EnumFlagsForString.Value3)]
+    [TestCase("Value1|Value2|Value3",
+        EnumFlagsForString.Value1 | EnumFlagsForString.Value2 | EnumFlagsForString.Value3)]
+    public void ShouldDeserialize(string name, EnumFlagsForString @enum)
+    {
+        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}");
+
+        value!.Data.Should().Be(@enum);
     }
 }

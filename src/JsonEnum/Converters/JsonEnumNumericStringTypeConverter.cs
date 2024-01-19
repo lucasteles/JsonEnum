@@ -9,6 +9,8 @@ namespace JsonEnum.Converters;
 class JsonEnumNumericStringTypeConverter<TEnum> : JsonEnumStringBaseConverter<TEnum>
     where TEnum : struct, Enum
 {
+    static readonly TypeCode typeCode = Type.GetTypeCode(typeof(TEnum));
+
     /// <summary>
     /// Allow parsing integer value
     /// </summary>
@@ -37,4 +39,7 @@ class JsonEnumNumericStringTypeConverter<TEnum> : JsonEnumStringBaseConverter<TE
         return JsonEnum.GetFlagListString(value, policy,
             currentOptions.FlagsValueSeparator ?? JsonEnum.DefaultValueSeparator);
     }
+
+    protected override TEnum ParseCustomString(string? value) =>
+        JsonEnum.TryConvertFromString(value, typeCode, out TEnum result) ? result : default;
 }

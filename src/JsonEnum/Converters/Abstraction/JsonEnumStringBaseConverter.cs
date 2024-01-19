@@ -49,6 +49,11 @@ public abstract class JsonEnumStringBaseConverter<TEnum> : JsonConverter<TEnum>
         LoadCache(null);
     }
 
+    /// <summary>
+    /// Defines custom parsing for non default string values
+    /// </summary>
+    protected virtual TEnum ParseCustomString(string value) => default;
+
     void LoadCache(JsonSerializerOptions? jsonOptions)
     {
         loadedPolicies.Add(jsonOptions?.DictionaryKeyPolicy);
@@ -118,7 +123,7 @@ public abstract class JsonEnumStringBaseConverter<TEnum> : JsonConverter<TEnum>
 
         var separator = currentOptions.FlagsValueSeparator ?? JsonEnum.DefaultValueSeparator;
         if (!enumString.Contains(separator))
-            return valueCache.GetValueOrDefault(enumString);
+            return valueCache.TryGetValue(enumString, out var value) ? value : ParseCustomString(enumString);
 
         var values = enumString.Split(separator);
         ulong flag = 0;

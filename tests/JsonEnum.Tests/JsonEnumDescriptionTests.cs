@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
 // ReSharper disable CheckNamespace
 
 namespace JsonEnum.Tests.Description;
@@ -10,7 +11,10 @@ public class JsonEnumDescriptionTests : BaseTest
 {
     readonly JsonSerializerOptions options = new()
     {
-        Converters = { new JsonEnumDescriptionConverter() },
+        Converters =
+        {
+            new JsonEnumDescriptionConverter()
+        },
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
@@ -88,5 +92,76 @@ public class JsonEnumDescriptionAttributeTests : BaseTest
         var expected = $@"{{""Data"":""{description}""}}";
 
         value.Should().Be(expected);
+    }
+}
+
+public class JsonEnumDescriptionFlagsTests : BaseTest
+{
+    public record TestData([property: JsonEnumDescription] EnumFlagsForDescription Data);
+
+    [TestCase(EnumFlagsForDescription.Value1, "Desc1")]
+    [TestCase(EnumFlagsForDescription.Value2, "Desc2")]
+    [TestCase(EnumFlagsForDescription.Value3, "Desc3")]
+    [TestCase(EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value2, "Desc1, Desc2")]
+    [TestCase(EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value3, "Desc1, Desc3")]
+    [TestCase(EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value2 | EnumFlagsForDescription.Value3,
+        "Desc1, Desc2, Desc3")]
+    public void ShouldSerialize(EnumFlagsForDescription @enum, string name)
+    {
+        var value = Serialize(new TestData(@enum));
+        var expected = $@"{{""Data"":""{name}""}}";
+
+        value.Should().Be(expected);
+    }
+
+    [TestCase("Desc1", EnumFlagsForDescription.Value1)]
+    [TestCase("Desc2", EnumFlagsForDescription.Value2)]
+    [TestCase("Desc3", EnumFlagsForDescription.Value3)]
+    [TestCase("Desc1, Desc2", EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value2)]
+    [TestCase("Desc1, Desc3", EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value3)]
+    [TestCase("Desc1, Desc2, Desc3",
+        EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value2 | EnumFlagsForDescription.Value3)]
+    public void ShouldDeserialize(string name, EnumFlagsForDescription @enum)
+    {
+        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}");
+
+        value!.Data.Should().Be(@enum);
+    }
+}
+
+public class JsonEnumDescriptionFlagsSepTests : BaseTest
+{
+    public record TestData(
+        [property: JsonEnumDescription(FlagsValueSeparator = "|")]
+        EnumFlagsForDescription Data
+    );
+
+    [TestCase(EnumFlagsForDescription.Value1, "Desc1")]
+    [TestCase(EnumFlagsForDescription.Value2, "Desc2")]
+    [TestCase(EnumFlagsForDescription.Value3, "Desc3")]
+    [TestCase(EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value2, "Desc1|Desc2")]
+    [TestCase(EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value3, "Desc1|Desc3")]
+    [TestCase(EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value2 | EnumFlagsForDescription.Value3,
+        "Desc1|Desc2|Desc3")]
+    public void ShouldSerialize(EnumFlagsForDescription @enum, string name)
+    {
+        var value = Serialize(new TestData(@enum));
+        var expected = $@"{{""Data"":""{name}""}}";
+
+        value.Should().Be(expected);
+    }
+
+    [TestCase("Desc1", EnumFlagsForDescription.Value1)]
+    [TestCase("Desc2", EnumFlagsForDescription.Value2)]
+    [TestCase("Desc3", EnumFlagsForDescription.Value3)]
+    [TestCase("Desc1|Desc2", EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value2)]
+    [TestCase("Desc1|Desc3", EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value3)]
+    [TestCase("Desc1|Desc2|Desc3",
+        EnumFlagsForDescription.Value1 | EnumFlagsForDescription.Value2 | EnumFlagsForDescription.Value3)]
+    public void ShouldDeserialize(string name, EnumFlagsForDescription @enum)
+    {
+        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}");
+
+        value!.Data.Should().Be(@enum);
     }
 }

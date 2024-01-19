@@ -25,9 +25,9 @@ public enum EnumForDescription
 [Flags]
 public enum EnumFlagsForDescription
 {
-    [Description("First value")] Value1 = 2,
-    [Description("Second value")] Value2 = 4,
-    [Description("Third value")] Value3 = 8,
+    [Description("Desc1")] Value1 = 2,
+    [Description("Desc2")] Value2 = 4,
+    [Description("Desc3")] Value3 = 8,
 }
 
 public enum EnumForMemberValue
@@ -39,7 +39,7 @@ public enum EnumForMemberValue
 [Flags]
 public enum EnumFlagsForMemberValue
 {
-    [EnumMember(Value = "First value")] Value1 = 2,
-    [EnumMember(Value = "Second value")] Value2 = 4,
-    [EnumMember(Value = "Third value")] Value3 = 8,
+    [EnumMember(Value = "Member1")] Value1 = 2,
+    [EnumMember(Value = "Member2")] Value2 = 4,
+    [EnumMember(Value = "Member3")] Value3 = 8,
 }

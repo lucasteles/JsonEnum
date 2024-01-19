@@ -95,3 +95,74 @@ public class JsonEnumDescriptionAttributeTests : BaseTest
         value.Should().Be(expected);
     }
 }
+
+public class JsonEnumMemberValueFlagsTests : BaseTest
+{
+    public record TestData([property: JsonEnumMemberValue] EnumFlagsForMemberValue Data);
+
+    [TestCase(EnumFlagsForMemberValue.Value1, "Member1")]
+    [TestCase(EnumFlagsForMemberValue.Value2, "Member2")]
+    [TestCase(EnumFlagsForMemberValue.Value3, "Member3")]
+    [TestCase(EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value2, "Member1, Member2")]
+    [TestCase(EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value3, "Member1, Member3")]
+    [TestCase(EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value2 | EnumFlagsForMemberValue.Value3,
+        "Member1, Member2, Member3")]
+    public void ShouldSerialize(EnumFlagsForMemberValue @enum, string name)
+    {
+        var value = Serialize(new TestData(@enum));
+        var expected = $@"{{""Data"":""{name}""}}";
+
+        value.Should().Be(expected);
+    }
+
+    [TestCase("Member1", EnumFlagsForMemberValue.Value1)]
+    [TestCase("Member2", EnumFlagsForMemberValue.Value2)]
+    [TestCase("Member3", EnumFlagsForMemberValue.Value3)]
+    [TestCase("Member1, Member2", EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value2)]
+    [TestCase("Member1, Member3", EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value3)]
+    [TestCase("Member1, Member2, Member3",
+        EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value2 | EnumFlagsForMemberValue.Value3)]
+    public void ShouldDeserialize(string name, EnumFlagsForMemberValue @enum)
+    {
+        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}");
+
+        value!.Data.Should().Be(@enum);
+    }
+}
+
+public class JsonEnumMemberValueFlagsSepTests : BaseTest
+{
+    public record TestData(
+        [property: JsonEnumMemberValue(FlagsValueSeparator = "|")]
+        EnumFlagsForMemberValue Data
+    );
+
+    [TestCase(EnumFlagsForMemberValue.Value1, "Member1")]
+    [TestCase(EnumFlagsForMemberValue.Value2, "Member2")]
+    [TestCase(EnumFlagsForMemberValue.Value3, "Member3")]
+    [TestCase(EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value2, "Member1|Member2")]
+    [TestCase(EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value3, "Member1|Member3")]
+    [TestCase(EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value2 | EnumFlagsForMemberValue.Value3,
+        "Member1|Member2|Member3")]
+    public void ShouldSerialize(EnumFlagsForMemberValue @enum, string name)
+    {
+        var value = Serialize(new TestData(@enum));
+        var expected = $@"{{""Data"":""{name}""}}";
+
+        value.Should().Be(expected);
+    }
+
+    [TestCase("Member1", EnumFlagsForMemberValue.Value1)]
+    [TestCase("Member2", EnumFlagsForMemberValue.Value2)]
+    [TestCase("Member3", EnumFlagsForMemberValue.Value3)]
+    [TestCase("Member1|Member2", EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value2)]
+    [TestCase("Member1|Member3", EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value3)]
+    [TestCase("Member1|Member2|Member3",
+        EnumFlagsForMemberValue.Value1 | EnumFlagsForMemberValue.Value2 | EnumFlagsForMemberValue.Value3)]
+    public void ShouldDeserialize(string name, EnumFlagsForMemberValue @enum)
+    {
+        var value = Deserialize<TestData>($@"{{""Data"": ""{name}""}}");
+
+        value!.Data.Should().Be(@enum);
+    }
+}
