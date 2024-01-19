@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace JsonEnum;
 
-static class Extensions
+static class ExtensionsInternal
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string ConvertString(this JsonNamingPolicy? namePolicy, string name) =>
@@ -32,4 +32,26 @@ static class Extensions
 
     public static string GetString<T>(this T value) where T : struct, Enum =>
         Enum.GetName(value) ?? value.ToString();
+}
+
+/// <summary>
+/// JsonEnum Extensions
+/// </summary>
+public static class Extensions
+{
+    /// <summary>
+    /// Gets the equivalent JsonNamingPolicy
+    /// </summary>
+    public static JsonNamingPolicy? ToJsonNamingPolicy(this JsonEnumNamingPolicy policy) =>
+        policy switch
+        {
+            JsonEnumNamingPolicy.CamelCase => JsonNamingPolicy.CamelCase,
+#if NET8_0_OR_GREATER
+            JsonEnumNamingPolicy.SnakeCaseLower => JsonNamingPolicy.SnakeCaseLower,
+            JsonEnumNamingPolicy.SnakeCaseUpper => JsonNamingPolicy.SnakeCaseUpper,
+            JsonEnumNamingPolicy.KebabCaseLower => JsonNamingPolicy.KebabCaseLower,
+            JsonEnumNamingPolicy.KebabCaseUpper => JsonNamingPolicy.KebabCaseUpper,
+#endif
+            _ => null,
+        };
 }

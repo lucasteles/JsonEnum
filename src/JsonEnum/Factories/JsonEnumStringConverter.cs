@@ -15,7 +15,7 @@ public sealed class JsonEnumStringConverter : JsonEnumConverterFactory
     public JsonEnumStringConverter(JsonEnumOptions? options) : base(options) { }
 
     /// <inheritdoc />
-    public JsonEnumStringConverter(JsonNamingPolicy policy) : base(new()
+    public JsonEnumStringConverter(JsonNamingPolicy? policy) : base(new()
     {
         NamingPolicy = policy,
     })
