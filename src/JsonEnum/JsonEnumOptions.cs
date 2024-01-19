@@ -32,12 +32,6 @@ public sealed class JsonEnumOptions
     public string? FlagsValueSeparator { get; set; }
 
     /// <summary>
-    /// When true the enum Flags will be serialized as json array
-    /// Default: true
-    /// </summary>
-    public bool FlagsAsArray { get; set; } = true;
-
-    /// <summary>
     /// Allow parsing from integer values
     /// </summary>
     public bool AllowIntegerValues { get; set; }
@@ -56,13 +50,18 @@ public sealed class JsonEnumOptions
     /// </summary>
     public bool PreferTypeConverter { get; set; } = true;
 
-
     /// <summary>
     /// Gets or sets enum name to be considered empty array when FlagsAsArray
     /// The case must be 0
     /// default: None
     /// </summary>
-    public string FlagsEmptyName { get; set; } = DefaultEmptyFlagsArray;
+    internal string FlagsEmptyName { get; set; } = DefaultEmptyFlagsArray;
+
+    /// <summary>
+    /// When true the enum Flags will be serialized as json array
+    /// Default: true
+    /// </summary>
+    internal bool FlagsAsArray { get; set; } = true;
 
     /// <summary>
     /// Defines which JsonPolicyName property from JsonSerializerOptions will be used

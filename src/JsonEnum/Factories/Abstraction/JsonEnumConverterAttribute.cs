@@ -45,14 +45,14 @@ public abstract class JsonEnumConverterAttribute : JsonConverterAttribute
     /// When true the enum Flags will be serialized as json array
     /// Default: true
     /// </summary>
-    public bool? FlagsAsArray { get; set; }
+    internal bool? FlagsAsArray { get; set; }
 
     /// <summary>
     /// Gets or sets enum name to be considered empty array when FlagsAsArray
     /// The case must be 0
     /// default: None
     /// </summary>
-    public string? FlagsEmptyName { get; set; }
+    internal string? FlagsEmptyName { get; set; }
 
     internal JsonEnumOptions GetOptions()
     {

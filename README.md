@@ -25,23 +25,21 @@ $ dotnet add package JsonEnum
 
 This library defines the following converters:
 
-- `JsonEnumDescriptionConverter`
-- `JsonEnumMemberValueConverter`
-- `JsonEnumNumericStringConverter`
-- `JsonEnumNumericConverter`
+- `JsonEnumStringConverter`: Covert to enum case name as string
+- `JsonEnumDescriptionConverter`: Convert to description attribute string
+- `JsonEnumMemberValueConverter`: Convert to member value attribute string
+- `JsonEnumNumericStringConverter`: Convert to numeric enum value as string
+- `JsonEnumNumericConverter`: Convert to numeric enum value
 
-For each converter above there is also an named attribute to set converters on properties or types.
+For each converter there is:
 
-There is also two others converter attributes to force one of the predefined behaviors(`number`| `string`), useful
-when you have already set a default converter for enums but need a type to be serialized as number or just the name.
-they are:
-
-- `JsonEnumString` - _applies EnumStringJsonConverter_
-- `JsonEnumNumeric` - _force to use number value_
+- An named attribute like `[JsonEnum(name)Converter]` to set converters on properties or
+  types
+- A generic type `JsonEnum(name)Converter<TEnum>` to be used on specific type for `JsonSerializeOptions.Converters`.
 
 ### Using [Description]
 
-Enabled adding `JsonEnumDescriptionConverter` to your json options or using the attribute `[JsonEnumDescription]` on
+Add `JsonEnumDescriptionConverter` to your json options or using the attribute `[JsonEnumDescription]` on
 your type.
 
 ````csharp
@@ -63,7 +61,7 @@ public class Foo
 var foo = new Foo { Value = MyEnum.Value1 };
 ````
 
-On the above sample `foo` will be serialized to/from:
+`foo` will be serialized to/from:
 
 ```json
 {
@@ -73,7 +71,7 @@ On the above sample `foo` will be serialized to/from:
 
 ### EnumMember [Description]
 
-Enabled adding `JsonEnumDescriptionConverter` to your json options or using the attribute `[JsonEnumDescription]` on
+Add `JsonEnumDescriptionConverter` to your json options or using the attribute `[JsonEnumDescription]` on
 your type.
 
 ````csharp
@@ -95,7 +93,7 @@ public class Foo
 var foo = new Foo { Value = MyEnum.Value1 };
 ````
 
-On the above sample `foo` will be serialized to/from:
+`foo` will be serialized to/from:
 
 ```json
 {
@@ -105,7 +103,7 @@ On the above sample `foo` will be serialized to/from:
 
 ### EnumMember [Description]
 
-Enabled adding `JsonEnumDescriptionConverter` to your json options or using the attribute `[JsonEnumDescription]` on
+Add `JsonEnumDescriptionConverter` to your json options or using the attribute `[JsonEnumDescription]` on
 your type.
 
 ````csharp
@@ -127,7 +125,7 @@ public class Foo
 var foo = new Foo { Value = MyEnum.Value1 };
 ````
 
-On the above sample `foo` will be serialized to/from:
+`foo` will be serialized to/from:
 
 ```json
 {
@@ -157,7 +155,7 @@ public class Foo
 var foo = new Foo { Value = MyEnum.Value1 };
 ````
 
-On the above sample `foo` will be serialized to/from:
+`foo` will be serialized to/from:
 
 ```json
 {
@@ -167,8 +165,9 @@ On the above sample `foo` will be serialized to/from:
 
 ### Numeric
 
-Usually you will don't need this because is the default behavior of enum serialization in .NET, but can be used when
-you already have set a converter on `ASP.NET` or `JsonSerializerOptions.Converters`
+This can be useful when you already have set a global converter on `JsonSerializerOptions.Converters` and need to
+override
+the behavior to numeric.
 
 ````csharp
 using System.Text.Json;
@@ -189,12 +188,11 @@ var foo = new Foo { Value = MyEnum.Value1 };
 
 JsonSerializer.Serialize(foo, new JsonSerializerOptions()
 {
-    Converters = { new JsonStringEnumConverter() }, // will be ignored on Foo type
-};
-)
+    Converters = { new JsonEnumStringConverter() }, // will be ignored on Foo type
+});
 ````
 
-On the above sample `foo` will be serialized to/from:
+`foo` will be serialized to/from:
 
 ```json
 {
@@ -211,12 +209,12 @@ the `swagger` schema. You can use [**this nuget package**](https://www.nuget.org
 $ dotnet add package JsonEnum.Swagger
 ```
 
-And use the `EnumJsonSchemaFilter` on your swagger configuration:
+And use the `JsonEnumSchemaFilter` on your swagger configuration:
 
 ```csharp
 services.AddSwaggerGen(options =>
 {
-    options.SchemaFilter<EnumJsonSchemaFilter>();
+    options.SchemaFilter<JsonEnumSchemaFilter>();
 });
 ```
 
