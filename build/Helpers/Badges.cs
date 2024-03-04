@@ -46,7 +46,7 @@ public static class Badges
     {
         if (!fileName.Parent.DirectoryExists())
             fileName.Parent.CreateDirectory();
-        
+
         var url = "https://img.shields.io/badge/" +
                   Uri.EscapeDataString($"{label}-{message}-{color}");
         HttpTasks.HttpDownloadFile(url, fileName);
